@@ -418,7 +418,7 @@ body {
 .nice-try-msg.show { opacity: 1; transform: none; }
 
 /* ============================
-   MAIN CONTENT (Sections 4–10)
+   MAIN CONTENT
    ============================ */
 #main-content { display: none; }
 #main-content.active { display: block; }
@@ -521,111 +521,7 @@ body {
 }
 
 /* ============================
-   5. MEMORY CARDS
-   ============================ */
-#memory-screen {
-  min-height: 100dvh;
-  padding: clamp(40px, 10vw, 80px) var(--sp) clamp(40px, 8vw, 60px);
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg3) 100%);
-}
-
-.memory-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
-  max-width: 800px;
-}
-@media(min-width:600px){ .memory-grid { grid-template-columns: 1fr 1fr; } }
-@media(min-width:900px){ .memory-grid { grid-template-columns: 1fr 1fr 1fr; } }
-
-.mem-card {
-  background: var(--card-bg);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 18px;
-  cursor: pointer;
-  box-shadow: var(--shadow2);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
-  opacity: 0;
-  transform: translateY(22px);
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.mem-card.visible { opacity: 1; transform: translateY(0); }
-.mem-card:hover, .mem-card:active { transform: translateY(-4px) scale(1.01); box-shadow: var(--shadow); }
-
-.mem-icon {
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-  display: block;
-}
-.mem-title {
-  font-family: var(--font-head);
-  font-size: 1rem;
-  color: var(--text);
-  font-style: italic;
-  margin-bottom: 6px;
-}
-.mem-tap {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-}
-
-/* Expanded overlay */
-.mem-expand {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--pink), #c084fc);
-  border-radius: var(--radius);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 10px;
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.3s, transform 0.3s;
-  pointer-events: none;
-  overflow-y: auto;
-}
-.mem-card.expanded .mem-expand {
-  opacity: 1;
-  transform: scale(1);
-  pointer-events: auto;
-}
-.mem-expand-text {
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  color: var(--white);
-  line-height: 1.5;
-  font-weight: 400;
-}
-.mem-expand-sarcasm {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: rgba(255,255,255,0.75);
-  line-height: 1.4;
-}
-.mem-close {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.65);
-  margin-top: 6px;
-  letter-spacing: 0.06em;
-}
-
-/* ============================
-   6. SHRUTI SYSTEM ANALYSIS
+   5. SHRUTI SYSTEM ANALYSIS
    ============================ */
 #shruti-screen {
   min-height: 100dvh;
@@ -742,7 +638,7 @@ body {
 }
 
 /* ============================
-   7. FRIENDSHIP PROTOCOLS
+   6. FRIENDSHIP PROTOCOLS
    ============================ */
 #protocols-screen {
   min-height: 100dvh;
@@ -820,7 +716,7 @@ body {
 .protocol-item:hover .glow-pulse, .protocol-item:active .glow-pulse { opacity: 1; }
 
 /* ============================
-   8. PHOTO GALLERY
+   7. PHOTO GALLERY
    ============================ */
 #photos-screen {
   min-height: 100dvh;
@@ -939,7 +835,7 @@ body {
 }
 
 /* ============================
-   9. SECRET VAULT
+   8. SECRET VAULT
    ============================ */
 #vault-screen {
   min-height: 100dvh;
@@ -1008,7 +904,7 @@ body {
 }
 
 /* ============================
-   10. FINAL SCREEN
+   9. FINAL SCREEN
    ============================ */
 #final-screen {
   min-height: 100dvh;
@@ -1247,7 +1143,6 @@ body {
 
   <div id="nav-dots" class="visible">
     <div class="nav-dot active" data-section="timeline-screen" title="Timeline"></div>
-    <div class="nav-dot" data-section="memory-screen" title="Memories"></div>
     <div class="nav-dot" data-section="shruti-screen" title="System Analysis"></div>
     <div class="nav-dot" data-section="protocols-screen" title="Protocols"></div>
     <div class="nav-dot" data-section="photos-screen" title="Photos"></div>
@@ -1297,125 +1192,6 @@ body {
         <div class="timeline-event">Insta deactivated 👁️🗨️</div>
         <span class="timeline-tag">(thoda sa disconnect ho gaya hai sab)</span>
       </div>
-    </div>
-  </section>
-
-  <section id="memory-screen">
-    <div class="section-label">// memory_dumps</div>
-    <h2 class="section-title">Random Moments… <em>that somehow stayed</em></h2>
-
-    <div class="memory-grid">
-
-      <div class="mem-card" data-memory="1">
-        <span class="mem-icon">🪔</span>
-        <div class="mem-title">"How it actually started"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Diwali holidays… school band, Instagram pe baat chalu... honestly… expected hi nahi tha ki itni normal si chat itni memorable ban jayegi.</div>
-          <div class="mem-expand-sarcasm">jyada ho gya na?</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-      
-      <div class="mem-card" data-memory="2">
-        <span class="mem-icon">🗣️</span>
-        <div class="mem-title">"The gossip connection"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Half of our chats = class gossip. baaki half = tu mujhe roast karti thi aur main defend bhi nahi karta tha properly. Shayad wahi se comfortable ho gaye the.</div>
-          <div class="mem-expand-sarcasm">waise roasting to aati nhi tujhe.</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="3">
-        <span class="mem-icon">🤝</span>
-        <div class="mem-title">"That “trust” line"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Mai casually bol gaya tha “i trust you” par tujhe pata hai… mai sab pe trust nahi karta.</div>
-          <div class="mem-expand-sarcasm">// rare drop item unlocked.</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="4">
-        <span class="mem-icon">🎲</span>
-        <div class="mem-title">"Truth & Dare wala phase"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Random Truth & Dare khelte khelte kab serious baatein aa jaati thi pata hi nahi chalta tha. aur haan… kuch questions unnecessary bhi the 💀</div>
-          <div class="mem-expand-sarcasm">// dangerous game. high stakes.</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="5">
-        <span class="mem-icon">🌙</span>
-        <div class="mem-title">"The normal good nights"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">“Good night, take care” itna to normal hota hai na…… par kuch chats khatam karne ka mann nahi karta.</div>
-          <div class="mem-expand-sarcasm">// typing... deleting... sending anyway.</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="6">
-        <span class="mem-icon">🩹</span>
-        <div class="mem-title">"Lowkey care"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Tu bolti thi “tension mat le” aur main bolta tha “haan theek hai” par actually… thoda sa tension kam ho jata tha.</div>
-          <div class="mem-expand-sarcasm">// healing spell actually worked.</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="7">
-        <span class="mem-icon">🤐</span>
-        <div class="mem-title">"Almost said everything"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Us time aisa tha ki sab kuch bol dene ka mann tha par phir socha… tu shi kh rhi h. This isn't love.</div>
-          <div class="mem-expand-sarcasm">Pta nhi kya shi h kya nhi...</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="8">
-        <span class="mem-icon">🎁</span>
-        <div class="mem-title">"The effort you never saw"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">28 March ke liye kuch banaya tha 2–3 din laga ke par tu usse pehle hi bhag gayi. ironic hai… effort tha, moment nahi mila.</div>
-          <div class="mem-expand-sarcasm">(My timing is always bad).</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="9">
-        <span class="mem-icon">👁️‍🗨️</span>
-        <div class="mem-title">"The unsaid understanding"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Tu kabhi openly serious nahi hoti thi par kabhi kabhi bina bole bhi samajh leti thi.</div>
-          <div class="mem-expand-sarcasm">// telepathy mode active.</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
-      <div class="mem-card" data-memory="10">
-        <span class="mem-icon">🧩</span>
-        <div class="mem-title">"What this actually was"</div>
-        <div class="mem-tap">tap to reveal</div>
-        <div class="mem-expand">
-          <div class="mem-expand-text">Na proper best friends na sirf normal classmates. kuch beech ka tha… jo define karna mushkil hai par ignore karna bhi.</div>
-          <div class="mem-expand-sarcasm">// status: complicated but nice.</div>
-          <div class="mem-close">[ tap to close ]</div>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -1878,7 +1654,7 @@ document.addEventListener('keydown', e => {
    NAV DOTS
    ============================ */
 const sections = [
-  'timeline-screen','memory-screen','shruti-screen',
+  'timeline-screen','shruti-screen',
   'protocols-screen','photos-screen','vault-screen','final-screen'
 ];
 
@@ -1904,17 +1680,6 @@ document.querySelectorAll('.nav-dot').forEach(dot => {
   dot.addEventListener('click', () => {
     const id = dot.dataset.section;
     $(id) && $(id).scrollIntoView({ behavior: 'smooth' });
-  });
-});
-
-/* ============================
-   MEMORY CARDS
-   ============================ */
-document.querySelectorAll('.mem-card').forEach(card => {
-  card.addEventListener('click', () => {
-    const isExpanded = card.classList.contains('expanded');
-    document.querySelectorAll('.mem-card').forEach(c => c.classList.remove('expanded'));
-    if (!isExpanded) card.classList.add('expanded');
   });
 });
 
