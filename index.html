@@ -54,13 +54,70 @@ body {
 .screen.active { display: flex; }
 
 /* ============================
+   HAMBURGER MENU
+   ============================ */
+.menu-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid var(--pink-pale);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  box-shadow: var(--shadow2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.menu-btn:active { transform: scale(0.95); }
+.menu-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--pink);
+  transition: 0.3s;
+  border-radius: 2px;
+}
+.dropdown {
+  position: fixed;
+  top: 76px;
+  right: 24px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+  min-width: 220px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.dropdown.show { display: flex; animation: fadeIn 0.2s ease; }
+.dropdown a {
+  padding: 16px 20px;
+  text-decoration: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px dashed var(--pink-pale);
+  transition: background 0.2s, color 0.2s;
+}
+.dropdown a:last-child { border-bottom: none; }
+.dropdown a:hover { background: var(--pink-pale); color: var(--pink); }
+
+/* ============================
    FLOATING AUDIO BUTTON
    ============================ */
 #audio-btn {
   position: fixed;
   bottom: 24px;
   right: 20px;
-  z-index: 9999;
+  z-index: 9998;
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -1170,6 +1227,16 @@ body {
   <div id="lb-caption" class="lb-caption"></div>
 </div>
 
+<button class="menu-btn" id="menuBtn" aria-label="Toggle Menu">
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+<div class="dropdown" id="dropdownMenu">
+  <a href="#" id="downloadIdBtn">download your travel id</a>
+  <a href="https://atulya-pratap.github.io/CMIYGL/">create another travel id</a>
+</div>
+
 <button id="audio-btn" title="Toggle Lo-Fi music" aria-label="Toggle music">
   <span class="note">🎵</span>
 </button>
@@ -1623,6 +1690,47 @@ function confetti() {
     setTimeout(() => p.remove(), 2200);
   }
 }
+
+/* ============================
+   HAMBURGER MENU & DOWNLOAD
+   ============================ */
+const menuBtn = $('menuBtn');
+const dropdownMenu = $('dropdownMenu');
+
+menuBtn.addEventListener('click', () => {
+  dropdownMenu.classList.toggle('show');
+});
+
+const downloadIdBtn = $('downloadIdBtn');
+downloadIdBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  
+  // REPLACE these URLs with your actual front/back images
+  const filesToDownload = [
+    { url: 'YOUR_FRONT_ID_PATH.png', name: 'Atulya_Shruti_Travel_ID_Front.png' },
+    { url: 'YOUR_BACK_ID_PATH.png', name: 'Atulya_Shruti_Travel_ID_Back.png' }
+  ];
+
+  filesToDownload.forEach(file => {
+    const link = document.createElement('a');
+    link.href = file.url;
+    link.download = file.name;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+  
+  dropdownMenu.classList.remove('show');
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+  if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+    dropdownMenu.classList.remove('show');
+  }
+});
+
 
 /* ============================
    1. SECURITY SCREEN LOGIC
