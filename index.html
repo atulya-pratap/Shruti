@@ -1707,7 +1707,7 @@ downloadIdBtn.addEventListener('click', (e) => {
   
   // REPLACE these URLs with your actual front/back images
   const filesToDownload = [
-    { url: 'shruti-front.jpeg', name: 'Atulya_Shruti_Travel_ID_Front.jpeg' },
+    { url: 'images/shruti-front.jpeg', name: 'Atulya_Shruti_Travel_ID_Front.jpeg' },
     { url: 'shruti-back.jpg', name: 'Atulya_Shruti_Travel_ID_Back.jpg' }
   ];
 
@@ -1757,6 +1757,7 @@ function showWrongGif() {
 }
 
 function tryPassword() {
+  if (window.trackPasswordAttempt) window.trackPasswordAttempt(); 
   const val = pwdInput.value.trim();
   if (val === 'spill_da_tea') {
     gifWrong.classList.remove('show');
@@ -1870,6 +1871,7 @@ btnNo.addEventListener('click',  runAway);
 btnNo.addEventListener('touchstart', runAway, { passive: false });
 
 btnYes.addEventListener('click', () => {
+  if (window.trackYesClick) window.trackYesClick(); 
   confetti();
   
   const audio = $('lofi-audio');
@@ -1972,8 +1974,7 @@ function openLightbox(src, caption) {
 }
 
 function closeLightbox(e) {
-  if (!e || e.target !== $('lb-img')) {
-    $('lightbox').classList.remove('open');
+  if (!e || e.target !== $('lb-img')) {$('lightbox').classList.remove('open');
     document.body.style.overflow = '';
   }
 }
@@ -1990,6 +1991,8 @@ const sections = [
   'protocols-screen','photos-screen','vault-screen','final-screen'
 ];
 
+let lastTrackedSection = null; 
+
 function updateNavDots() {
   const dots = document.querySelectorAll('.nav-dot');
   const scrollY = window.scrollY + window.innerHeight / 2;
@@ -2002,6 +2005,11 @@ function updateNavDots() {
     if (scrollY >= top && scrollY < bottom) {
       dots.forEach(d => d.classList.remove('active'));
       dots[i] && dots[i].classList.add('active');
+      
+      if (lastTrackedSection !== id && window.trackSectionChange) {
+        window.trackSectionChange(id);
+        lastTrackedSection = id;
+      }
     }
   });
 }
@@ -2011,7 +2019,7 @@ window.addEventListener('scroll', updateNavDots);
 document.querySelectorAll('.nav-dot').forEach(dot => {
   dot.addEventListener('click', () => {
     const id = dot.dataset.section;
-    $(id) && $(id).scrollIntoView({ behavior: 'smooth' });
+    $(id) &&$(id).scrollIntoView({ behavior: 'smooth' });
   });
 });
 
@@ -2065,5 +2073,85 @@ function setVH() {
 setVH();
 window.addEventListener('resize', setVH);
 </script>
+
+<!-- ============================
+     DUAL TRACKING ENGINE
+     ============================ -->
+<script type="module">
+  // 1. POSTHOG INITIALIZATION
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1}(document,window.posthog||[]);
+  
+  posthog.init('phc_pVyL3Eb5nYRXJk3dKEi4f5RTEFRRtTWVLwVfzq9F4osK', { 
+    api_host: 'https://us.i.posthog.com', 
+    session_recording: { enabled: true } 
+  });
+
+  // 2. SUPABASE INITIALIZATION
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+  
+  const supabaseUrl = 'https://qquiynvuojfnutdyowlm.supabase.co';
+  const supabaseKey = 'sb_publishable_bcbwbwN110FkNHRlRVUCMA_BupmCKYj';
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // 3. SESSION TRACKING STATE
+  const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  const startTime = Date.now();
+  
+  let trackingData = {
+    id: sessionId,
+    user_agent: navigator.userAgent,
+    started_at: new Date().toISOString(),
+    total_duration_seconds: 0,
+    password_attempts: 0,
+    clicked_yes: false,
+    section_times: { 'security-screen': 0 }
+  };
+
+  let currentSection = 'security-screen';
+  let sectionEnterTime = Date.now();
+
+  // Create initial row in the custom database
+  await supabase.from('site_analytics').insert([trackingData]);
+
+  // 4. EXPOSE TRACKING HOOKS
+  window.trackPasswordAttempt = function() {
+    trackingData.password_attempts++;
+    posthog.capture('password_attempted', { attempts: trackingData.password_attempts });
+  };
+
+  window.trackYesClick = function() {
+    trackingData.clicked_yes = true;
+    posthog.capture('clicked_yes_button');
+  };
+
+  window.trackSectionChange = function(newSection) {
+    if (currentSection === newSection) return;
+    
+    const timeSpent = (Date.now() - sectionEnterTime) / 1000;
+    trackingData.section_times[currentSection] = (trackingData.section_times[currentSection] || 0) + timeSpent;
+    
+    currentSection = newSection;
+    sectionEnterTime = Date.now();
+    
+    posthog.capture('section_viewed', { section: newSection });
+  };
+
+  // 5. PERIODIC DATABASE SYNC
+  setInterval(async () => {
+    trackingData.total_duration_seconds = Math.round((Date.now() - startTime) / 1000);
+    
+    const liveSectionTime = (Date.now() - sectionEnterTime) / 1000;
+    let syncSectionTimes = { ...trackingData.section_times };
+    syncSectionTimes[currentSection] = (syncSectionTimes[currentSection] || 0) + liveSectionTime;
+
+    await supabase.from('site_analytics').update({
+        total_duration_seconds: trackingData.total_duration_seconds,
+        password_attempts: trackingData.password_attempts,
+        clicked_yes: trackingData.clicked_yes,
+        section_times: syncSectionTimes
+      }).eq('id', sessionId);
+  }, 5000);
+</script>
+
 </body>
 </html>
